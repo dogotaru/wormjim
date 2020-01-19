@@ -23,3 +23,4 @@ services:
             - NPM_CONFIG_LOGLEVEL=info
             - ADB_IP=192.168.1.8
             - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.10
+            - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
