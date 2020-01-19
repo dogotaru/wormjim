@@ -37,6 +37,5 @@
     "chokidar": "^3.3.1",
     "jest-expo": "~36.0.1"
   },
-
   "private": true
 }
