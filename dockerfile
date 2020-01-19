@@ -12,7 +12,14 @@ USER root
 # inotify-tools - for react hot loading, Linux Filesystem Events
 RUN \
     apt-get update && apt-get install -y \
-        nano vim inotify-tools git
+        nano vim inotify-tools git python
+
+# use the latest stable release
+RUN \
+    cd /home/node \
+    && git clone https://github.com/facebook/watchman.git -b v4.9.0 --depth 1 \
+    && cd watchman && ./autogen.sh && ./configure && make \
+    && sudo make install
 
 USER node
 
