@@ -2,5 +2,3 @@
 GameIsh/node_modules/
 public/
 docker-compose.override.yml
-
-global/
