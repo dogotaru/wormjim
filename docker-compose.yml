@@ -18,7 +18,7 @@ services:
             - ./global:/home/node/.npm-global
             - ./local:/home/node/app
         environment:
-            - CHOKIDAR_USEPOLLING=true
+#            - CHOKIDAR_USEPOLLING=true
             - NPM_CONFIG_PREFIX=/home/node/.npm-global
             - NPM_CONFIG_LOGLEVEL=info
             - ADB_IP=192.168.1.8

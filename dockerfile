@@ -22,6 +22,8 @@ RUN \
 #    && cd watchman && ./autogen.sh && ./configure && make \
 #    && make install
 
+# COPY /usr/local/bin/watchman* /usr/local/bin/
+
 USER node
 
 #RUN if [ $CHOSE_PROXY = "artifactory" ]; then \
