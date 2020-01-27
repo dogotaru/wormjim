@@ -13,7 +13,7 @@ export default function App(props) {
   const [backgroundMusic, setBackgroundMusic] = useState(new Audio.Sound());
 
   useEffect(() => {
-    isLoadingComplete && backgroundMusic.setIsLoopingAsync(true) && backgroundMusic.playAsync();
+    isLoadingComplete && backgroundMusic.setIsLoopingAsync(true) && backgroundMusic.playAsync() && backgroundMusic.setVolumeAsync(0.2);
     return () => backgroundMusic.stopAsync();
   }, [isLoadingComplete]);
 

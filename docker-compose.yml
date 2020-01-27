@@ -13,7 +13,7 @@ services:
         working_dir: /home/node/app
         ports:
             - 8090:8090
-            - 19000-19002:19000-19002
+            - 19000-19006:19000-19006
         volumes:
             - ./global:/home/node/.npm-global
             - ./local:/home/node/app
@@ -21,6 +21,6 @@ services:
 #            - CHOKIDAR_USEPOLLING=true
             - NPM_CONFIG_PREFIX=/home/node/.npm-global
             - NPM_CONFIG_LOGLEVEL=info
-            - ADB_IP=192.168.1.8
-            - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.6
+            - ADB_IP=192.168.1.6
+            - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.14
             - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0

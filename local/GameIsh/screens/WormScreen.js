@@ -17,9 +17,11 @@ export default class SingleTouch extends Component {
     onUpdate = ({ touches }) => {
         let move = touches.find(event => event.type === "move");
         if (move) {
+            const x = this.state.x + move.delta.pageX;
+            const y = this.state.y + move.delta.pageY;
             this.setState({
-                x: this.state.x + move.delta.pageX,
-                y: this.state.y + move.delta.pageY
+                x: x < 0 ? 0 : (x > WIDTH ? WIDTH : x),
+                y: y < 0 ? 0 : (y > HEIGHT ? HEIGHT : y),
             });
         }
     };
