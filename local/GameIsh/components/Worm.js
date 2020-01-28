@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 
-import { StyleSheet, View, Dimensions, Animated, Easing } from "react-native";
-import {useTrail, animated} from 'react-spring'
+import {StyleSheet, View, Dimensions, Animated, Easing} from "react-native";
+import {useTrail, animated, useSpring} from 'react-spring'
 import {Asset} from "expo-asset";
 import * as Font from "expo-font";
 import {Ionicons} from "@expo/vector-icons";
 import {Audio} from "expo-av";
 
 const ViewAnimatedSpring = animated(View);
-// const ViewAnimated = Animated.View;
-const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
+const ViewAnimatedCollectible = animated(View);
+const {width: WIDTH, height: HEIGHT} = Dimensions.get("window");
 const BODY_DIAMETER = Math.trunc(Math.max(WIDTH, HEIGHT) * 0.085);
 const HALF_DIAMETER = BODY_DIAMETER / 2;
 const MAX_WIDTH = Math.floor(WIDTH - HALF_DIAMETER);
@@ -20,9 +20,10 @@ const COLORS = ["#86E9BE", "#8DE986", "#B8E986", "#E9E986", "#86E9BE", "#8DE986"
 
 export default function Worm(props) {
 
-    const [{ x, y }, setXY] = useState({x: 0, y: 0});
+    const [{x, y}, setXY] = useState({x: 0, y: 0});
     const [trailLength, setTrailLength] = useState(2);
-    const [trail, setTrail, stopTrail] = useTrail(trailLength, () => ({ left: x, top: y }));
+    const [trail, setTrail, stopTrail] = useTrail(trailLength, () => ({left: x, top: y}));
+    const [rotate, setRotate, stopRotate] = useSpring(() => ({ from: { rotate: "45deg" } }));
     const [collectiblePosition, setCollectiblePosition] = useState(null);
     const [consumeCollectible, setConsumeCollectible] = useState(false);
     const [needCollectible, setNeedCollectible] = useState(false);
@@ -30,7 +31,7 @@ export default function Worm(props) {
     const [eatingAudio, setEatingAudio] = useState(null);
     const [cheersAudio, setCheersAudio] = useState(null);
     const [smackAudio, setSmackAudio] = useState(null);
-
+// console.log(rotate);
     // const spinAnimationValue = new Animated.Value(0);
     // Animated.timing(spinAnimationValue, {
     //     toValue: 1,
@@ -44,13 +45,15 @@ export default function Worm(props) {
 
     useEffect(() => {
 
-        setTrail({ left: x, top: y });
+        setTrail({left: x, top: y});
         collectiblePosition && (Math.floor(x) > collectiblePosition.left - HALF_DIAMETER)
-            && (Math.floor(x) < collectiblePosition.left + HALF_DIAMETER)
-            && (Math.floor(y) > collectiblePosition.top - HALF_DIAMETER)
-            && (Math.floor(y) < collectiblePosition.top + HALF_DIAMETER)
-            && setConsumeCollectible(true);
-        return () => { stopTrail(); };
+        && (Math.floor(x) < collectiblePosition.left + HALF_DIAMETER)
+        && (Math.floor(y) > collectiblePosition.top - HALF_DIAMETER)
+        && (Math.floor(y) < collectiblePosition.top + HALF_DIAMETER)
+        && setConsumeCollectible(true);
+        return () => {
+            stopTrail();
+        };
     }, [x, y]);
 
     useEffect(() => {
@@ -58,27 +61,30 @@ export default function Worm(props) {
         const x = props.x < HALF_DIAMETER ? HALF_DIAMETER + 1 : (props.x > MAX_WIDTH ? MAX_WIDTH : props.x);
         const y = props.y < HALF_DIAMETER ? HALF_DIAMETER + 1 : (props.y > MAX_HEIGHT ? MAX_HEIGHT : props.y);
 
-        setXY({ x: x - HALF_DIAMETER, y: y - HALF_DIAMETER });
+        setXY({x: x - HALF_DIAMETER, y: y - HALF_DIAMETER});
     }, [props.x, props.y]);
 
     useEffect(() => {
 
-        needCollectible && setCollectiblePosition((([left, top]) => {
+        if (needCollectible) {
 
-            left %= MAX_WIDTH;
-            top %= MAX_HEIGHT;
+            setCollectiblePosition((([left, top]) => {
 
-            ((left < BODY_DIAMETER) && (left = BODY_DIAMETER))
+                left %= MAX_WIDTH;
+                top %= MAX_HEIGHT;
+
+                ((left < BODY_DIAMETER) && (left = BODY_DIAMETER))
                 || ((left > MAX_WIDTH) && (left = MAX_WIDTH));
-            ((top < BODY_DIAMETER) && (top += BODY_DIAMETER))
+                ((top < BODY_DIAMETER) && (top += BODY_DIAMETER))
                 || ((top > MAX_HEIGHT) && (top = MAX_HEIGHT));
-            setNeedCollectible(false);
+                setNeedCollectible(false);
 
-            return { left, top };
-        })([
-            /*collectiblePosition ? xorShift(collectiblePosition.left) : */Math.floor(Math.random() * Math.floor(WIDTH)),
-            /*collectiblePosition ? xorShift(collectiblePosition.top) : */Math.floor(Math.random() * Math.floor(HEIGHT))
-        ]));
+                return {left, top};
+            })([
+                /*collectiblePosition ? xorShift(collectiblePosition.left) : */Math.floor(Math.random() * Math.floor(WIDTH)),
+                /*collectiblePosition ? xorShift(collectiblePosition.top) : */Math.floor(Math.random() * Math.floor(HEIGHT))
+            ]));
+        }
     }, [needCollectible]);
 
     useEffect(() => {
@@ -91,7 +97,7 @@ export default function Worm(props) {
             (trailLength % 7 === 0) && cheersAudio.replayAsync();
             (trailLength % 3 === 0) && eatingAudio.replayAsync();
             (trailLength % 5 === 0) && smackAudio.replayAsync();
-            setTrailLength(trailLength + 1);
+            (trailLength < 40) && setTrailLength(trailLength + 1);
         }
     }, [consumeCollectible]);
 
@@ -133,22 +139,23 @@ export default function Worm(props) {
 
     useEffect(() => {
 
+        setRotate({ to: [{rotate: "405deg"}, {rotate: "45deg"}] });
     }, [collectiblePosition]);
 
     useEffect(() => {
 
     }, [trail]);
 
-    function xorShift(seed){
+    function xorShift(seed) {
 
         seed ^= seed << 13;
         seed ^= seed >> 17;
         seed ^= seed << 5;
-        const _return  = (seed <0) ? ~seed + 1 : seed;
+        const _return = (seed < 0) ? ~seed + 1 : seed;
 
         return _return; //2's complement of the negative result to make all numbers positive.
     }
-
+// console.log(1);
     return !(x && y) ? null : <View>
         {trail.map((props, index) => <ViewAnimatedSpring key={index} style={{
             ...css.body,
@@ -160,7 +167,10 @@ export default function Worm(props) {
             ...props
         }}/>)}
         <View style={{...css.head, left: x, top: y, zIndex: trailLength + 1}}/>
-        {collectiblePosition && <View style={{...css.collectible, ...collectiblePosition, transform: [{rotate: "45deg"}]}}/>}
+        {collectiblePosition && <ViewAnimatedCollectible style={{
+            ...css.collectible, ...collectiblePosition,// ...rotate
+            transform: [((_rotate) => { /*console.log('-----------',_rotate);*/ return _rotate;})(rotate)]
+        }}/>}
 
     </View>;
 }
@@ -194,6 +204,7 @@ const css = StyleSheet.create({
         height: BODY_DIAMETER / 1.5,
         position: "absolute",
         // borderRadius: BODY_DIAMETER * 2,
+        // transform: [{rotate: '45deg' }],
         zIndex: 1
     },
 });
