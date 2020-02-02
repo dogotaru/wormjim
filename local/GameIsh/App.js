@@ -4,8 +4,7 @@ import * as Font from 'expo-font';
 import React, { useState, useEffect } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-import AppNavigator from './navigation/AppNavigator';
+import AppContainer from './navigation/AppNavigator';
 import {Audio} from "expo-av";
 
 export default function App(props) {
@@ -23,13 +22,14 @@ export default function App(props) {
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
         onFinish={() => setLoadingComplete(true)}
+        // autoHideSplash={false}
       />
     );
   } else {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
+        <AppContainer />
       </View>
     );
   }

@@ -15,13 +15,22 @@ export default class SingleTouch extends Component {
     }
 
     onUpdate = ({ touches }) => {
-        let move = touches.find(event => event.type === "move");
+
+        let move = touches.find(event => event.type === "move" );
+        // let end = touches.find(event => event.type === "end");
         if (move) {
-            const x = this.state.x + move.delta.pageX;
-            const y = this.state.y + move.delta.pageY;
+
             this.setState({
-                x: x < 0 ? 0 : (x > WIDTH ? WIDTH : x),
-                y: y < 0 ? 0 : (y > HEIGHT ? HEIGHT : y),
+                // x: x < 0 ? 0 : (x > WIDTH ? WIDTH : x),
+                // y: y < 0 ? 0 : (y > HEIGHT ? HEIGHT : y),
+                x: this.state.x + move.delta.pageX * 3,
+                y: this.state.y + move.delta.pageY * 3
+                // end: !!end
+            }, () => {
+                this.state.x < 0 && this.setState({ x: 0 });
+                this.state.x > WIDTH && this.setState({ x: WIDTH });
+                this.state.y < 0 && this.setState({ y: 0 });
+                this.state.y > HEIGHT && this.setState({ y: HEIGHT });
             });
         }
     };
@@ -30,7 +39,7 @@ export default class SingleTouch extends Component {
         return (
             <GameLoop style={styles.container} onUpdate={this.onUpdate}>
 
-                <StatusBar hidden={true} />
+                <StatusBar hidden={false} />
 
                 <Worm {...this.state} />
 

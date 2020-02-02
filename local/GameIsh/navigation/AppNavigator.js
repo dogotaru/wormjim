@@ -1,12 +1,32 @@
 import React from 'react';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import {Platform} from 'react-native';
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import HomeScreen from '../screens/HomeScreen';
+import WormScreen from "../screens/WormScreen";
 
-import MainTabNavigator from './MainTabNavigator';
+const config = Platform.select({
+    web: {headerMode: 'screen'},
+    default: {},
+});
 
-export default createAppContainer(
-  createSwitchNavigator({
-    // You could add another route here for authentication.
-    // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-    Main: MainTabNavigator,
-  })
+const WormStack = createStackNavigator(
+    {
+        Home: {
+            screen: HomeScreen,
+            navigationOptions: {
+                headerShown: false
+            }
+        },
+        Worm: {
+            screen: WormScreen, //HomeScreen,
+            navigationOptions: {
+                headerShown: false
+            }
+        }
+    },
+    config
 );
+WormStack.path = '';
+
+export default createAppContainer(WormStack);
