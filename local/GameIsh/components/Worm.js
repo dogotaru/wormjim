@@ -5,6 +5,7 @@ import {useTrail, animated, useSpring, interpolate} from 'react-spring';
 
 const ViewAnimatedSpring = animated(View);
 const ViewAnimatedCollectible = animated(View);
+const ImageAnimatedLikeWobble = animated(Image);
 const {width: WIDTH, height: HEIGHT} = Dimensions.get("window");
 const BODY_DIAMETER = Math.trunc(Math.max(WIDTH, HEIGHT) * 0.09);
 const HALF_DIAMETER = BODY_DIAMETER / 2;
@@ -22,6 +23,7 @@ export default function Worm(props) {
     const [trailLength, setTrailLength] = useState(-1);
     const [trail, setTrail, stopTrail] = useTrail(maxTrailLength, () => ({left: 0, top: 0}));
     const [rotate, setRotate, stopRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
+    const [likeWobble, setLikeWobble] = useSpring(() => ({from: {z: 0}}));
     const [collectiblePosition, setCollectiblePosition] = useState(null);
     const [consumeCollectible, setConsumeCollectible] = useState(false);
     const [needCollectible, setNeedCollectible] = useState(false);
@@ -77,11 +79,18 @@ export default function Worm(props) {
 
             setConsumeCollectible(false);
             setNeedCollectible(true);
-            (trailLength % 7 === 0) && props.assets.cheersAudio.replayAsync();
-            (trailLength % 3 === 0) && props.assets.eatingAudio.replayAsync();
-            (trailLength % 5 === 0) && props.assets.smackAudio.replayAsync();
-            (trailLength === maxTrailLength - 1) && props.assets.ohYeahAudio.replayAsync();
-            (trailLength === maxTrailLength - 1) && props.assets.clappingAudio.replayAsync();
+
+            if ((trailLength === maxTrailLength - 1)) {
+
+                props.assets.cheersAudio.replayAsync();
+                props.assets.ohYeahAudio.replayAsync();
+                props.assets.clappingAudio.replayAsync();
+            } else {
+
+                (trailLength % 7 === 0) && props.assets.cheersAudio.replayAsync();
+                (trailLength % 3 === 0) && props.assets.eatingAudio.replayAsync();
+                (trailLength % 5 === 0) && props.assets.smackAudio.replayAsync();
+            }
             (trailLength < maxTrailLength) && setTrailLength(trailLength + 1);
         }
     }, [consumeCollectible]);
@@ -101,6 +110,11 @@ export default function Worm(props) {
             props.assets.wormBackgroundMusic_level_01.stopAsync();
         }
     }, [props.focusState]);
+
+    useEffect(() => {
+
+        (trailLength === maxTrailLength) && setLikeWobble({ to: [{z: 1}, {z: 0}], config: { duration: 1000 } });
+    }, [trailLength]);
 
     useEffect(() => {
 
@@ -151,9 +165,15 @@ export default function Worm(props) {
             top: 0,
             width: WIDTH,
             height: HEIGHT
-        }}><Image
+        }}><ImageAnimatedLikeWobble
             source={require('../assets/images/thumbs-up.png')}
-            style={{resizeMode: 'center', zIndex: 199, width: 200}}
+            style={{
+                resizeMode: 'center', zIndex: 199, width: 200,
+                transform: likeWobble.z.interpolate({
+                        range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
+                        output: [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1]
+                    }).interpolate(z => [{scale:z}])
+            }}
         /></View>}
 
     </View>;
