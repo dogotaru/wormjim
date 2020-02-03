@@ -1,51 +1,42 @@
-import React, { Component } from "react";
+import React, {useEffect, useState} from "react";
 import { StyleSheet, Dimensions, StatusBar } from "react-native";
 import { GameLoop } from "react-native-game-engine";
+import {useFocusState} from 'react-navigation-hooks';
 import Worm from "../components/Worm";
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
 
-export default class SingleTouch extends Component {
-    constructor() {
-        super();
-        this.state = {
-            x: WIDTH / 2,
-            y: HEIGHT / 2,
-        };
-    }
+export default function SingleTouch(props) {
 
-    onUpdate = ({ touches }) => {
+    const [assets] = useState(props.screenProps.assets);
+    const [{x, y}, setXY] = useState({x: WIDTH / 2, y: HEIGHT / 2});
+    const focusState = useFocusState();
+
+    const onUpdate = ({ touches }) => {
 
         let move = touches.find(event => event.type === "move" );
-        // let end = touches.find(event => event.type === "end");
         if (move) {
 
-            this.setState({
-                // x: x < 0 ? 0 : (x > WIDTH ? WIDTH : x),
-                // y: y < 0 ? 0 : (y > HEIGHT ? HEIGHT : y),
-                x: this.state.x + move.delta.pageX * 3,
-                y: this.state.y + move.delta.pageY * 3
-                // end: !!end
-            }, () => {
-                this.state.x < 0 && this.setState({ x: 0 });
-                this.state.x > WIDTH && this.setState({ x: WIDTH });
-                this.state.y < 0 && this.setState({ y: 0 });
-                this.state.y > HEIGHT && this.setState({ y: HEIGHT });
-            });
+            setXY({x: x + move.delta.pageX * 3, y: y + move.delta.pageY * 3});
         }
     };
 
-    render() {
-        return (
-            <GameLoop style={styles.container} onUpdate={this.onUpdate}>
+    useEffect(() => {
+        x < 0 && setXY({x: 0, y});
+        x > WIDTH && setXY({x: WIDTH, y});
+        y < 0 && setXY({x, y: 0});
+        y > HEIGHT && setXY({x, y: HEIGHT});
+    }, [x, y]);
 
-                <StatusBar hidden={false} />
+    return (
+        <GameLoop style={styles.container} onUpdate={onUpdate}>
 
-                <Worm {...this.state} />
+            <StatusBar hidden={false} />
 
-            </GameLoop>
-        );
-    }
+            <Worm x={x} y={y} assets={assets} focusState={focusState} />
+
+        </GameLoop>
+    );
 }
 
 const styles = StyleSheet.create({

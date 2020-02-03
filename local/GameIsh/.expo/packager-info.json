@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 1324,
-  "expoServerNgrokUrl": "https://tu-cus.anonymous.gameish.exp.direct",
-  "packagerNgrokUrl": "https://packager.tu-cus.anonymous.gameish.exp.direct",
-  "ngrokPid": 1364,
+  "packagerPid": 6111,
+  "expoServerNgrokUrl": "https://f3-8x5.dogotaru.gameish.exp.direct",
+  "packagerNgrokUrl": "https://packager.f3-8x5.dogotaru.gameish.exp.direct",
+  "ngrokPid": 6134,
   "webpackServerPort": null
 }

@@ -38,7 +38,8 @@
     "@babel/core": "^7.0.0",
     "babel-preset-expo": "~8.0.0",
     "chokidar": "^3.3.1",
-    "jest-expo": "~36.0.1"
+    "jest-expo": "~36.0.1",
+    "react-navigation-hooks": "^1.1.0"
   },
   "private": true
 }

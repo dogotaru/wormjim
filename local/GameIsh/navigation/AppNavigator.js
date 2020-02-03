@@ -13,13 +13,13 @@ const config = Platform.select({
 const WormStack = createStackNavigator(
     {
         Home: {
-            screen: HomeScreen,
+            screen: (screenProps) => <HomeScreen {...screenProps} />,
             navigationOptions: {
                 headerShown: false
             }
         },
         Worm: {
-            screen: WormScreen, //HomeScreen,
+            screen: (screenProps) => <WormScreen {...screenProps} />,
             navigationOptions: {
                 headerShown: false
             }
