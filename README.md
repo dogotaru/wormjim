@@ -2,6 +2,8 @@
 ``
 npm install -g expo-cli
 ``
+or
+``npm install expo-cli --global --no-optional``
 
 ``
 expo init AwesomeProject

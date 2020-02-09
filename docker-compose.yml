@@ -22,5 +22,5 @@ services:
             - NPM_CONFIG_PREFIX=/home/node/.npm-global
             - NPM_CONFIG_LOGLEVEL=info
             - ADB_IP=192.168.1.6
-            - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.14
+            - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.11
             - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0

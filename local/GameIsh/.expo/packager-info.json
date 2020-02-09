@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 6111,
-  "expoServerNgrokUrl": "https://f3-8x5.dogotaru.gameish.exp.direct",
-  "packagerNgrokUrl": "https://packager.f3-8x5.dogotaru.gameish.exp.direct",
-  "ngrokPid": 6134,
+  "packagerPid": 733,
+  "expoServerNgrokUrl": "https://f3-8x5.anonymous.gameish.exp.direct",
+  "packagerNgrokUrl": "https://packager.f3-8x5.anonymous.gameish.exp.direct",
+  "ngrokPid": 756,
   "webpackServerPort": null
 }

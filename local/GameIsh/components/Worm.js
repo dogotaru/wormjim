@@ -1,29 +1,35 @@
-import React, {useEffect, useState, useRef} from "react";
-
+import React, {useEffect, useState} from "react";
 import {StyleSheet, View, Dimensions, Animated, Easing, TouchableHighlight, Image, Text} from "react-native";
-import {useTrail, animated, useSpring, interpolate} from 'react-spring';
-
-const ViewAnimatedSpring = animated(View);
-const ViewAnimatedCollectible = animated(View);
-const ImageAnimatedLikeWobble = animated(Image);
-const {width: WIDTH, height: HEIGHT} = Dimensions.get("window");
-const BODY_DIAMETER = Math.trunc(Math.max(WIDTH, HEIGHT) * 0.09);
-const HALF_DIAMETER = BODY_DIAMETER / 2;
-const MAX_WIDTH = Math.floor(WIDTH - HALF_DIAMETER);
-const MAX_HEIGHT = Math.floor(HEIGHT - HALF_DIAMETER);
-const BORDER_WIDTH = Math.trunc(BODY_DIAMETER * 0.08);
-const COLLECTIBLE_DIAMETER = BODY_DIAMETER / 1.5;
-const COLORS = ["#4815AA", "#3783FF", "#4DE94C", "#FFEE00", "#FF8C00", "#F60000", "#5F4493", "#FFEE00", "#EFA43A", "#E84947", "#8BC90B", "#F60000"];
+import {useTrail, useSpring} from 'react-spring';
+import {
+    ImageAnimated,
+    ViewAnimated,
+    WIDTH,
+    HEIGHT,
+    BODY_DIAMETER,
+    HALF_DIAMETER,
+    MAX_WIDTH,
+    MAX_HEIGHT,
+    BORDER_WIDTH,
+    COLLECTIBLE_DIAMETER
+} from "../constants/Layout";
+import {CSS_WORM as CSS} from "../constants/Styles";
+import {COLORS} from "../constants/Colors";
 
 export default function Worm(props) {
 
     const [{x, y}, setXY] = useState({x: 0, y: 0});
-    const [maxTrailLength, setMaxTrailLength] = useState(40);
+    const [maxTrailLength, setMaxTrailLength] = useState(10);
     const [bodyDecrementRatio, setBodyDecrementRatio] = useState(BODY_DIAMETER / (maxTrailLength + 20));
     const [trailLength, setTrailLength] = useState(-1);
     const [trail, setTrail, stopTrail] = useTrail(maxTrailLength, () => ({left: 0, top: 0}));
     const [rotate, setRotate, stopRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
-    const [likeWobble, setLikeWobble] = useSpring(() => ({from: {z: 0}}));
+    const [headRotate, setHeadRotate] = useSpring(() => ({from: {rotate: "180deg"}}));
+    const [likeWobble, setLikeWobble] = useSpring(() => ({
+        from: {z: 0},
+        to: [{z: 1}, {z: 0}],
+        config: {duration: 1000}
+    }));
     const [collectiblePosition, setCollectiblePosition] = useState(null);
     const [consumeCollectible, setConsumeCollectible] = useState(false);
     const [needCollectible, setNeedCollectible] = useState(false);
@@ -43,10 +49,13 @@ export default function Worm(props) {
 
     useEffect(() => {
 
-        const x = props.x < HALF_DIAMETER ? 1 : (props.x > MAX_WIDTH ? MAX_WIDTH - HALF_DIAMETER : props.x - HALF_DIAMETER);
-        const y = props.y < HALF_DIAMETER ? 1 : (props.y > MAX_HEIGHT - BORDER_WIDTH ? MAX_HEIGHT - BORDER_WIDTH : props.y);
+        if (trailLength < maxTrailLength) {
 
-        setXY({x: x, y: y});
+            const x = props.x < HALF_DIAMETER ? 1 : (props.x > MAX_WIDTH ? MAX_WIDTH - HALF_DIAMETER : props.x - HALF_DIAMETER);
+            const y = props.y < HALF_DIAMETER ? 1 : (props.y > MAX_HEIGHT - BORDER_WIDTH ? MAX_HEIGHT - BORDER_WIDTH : props.y);
+
+            setXY({x: x, y: y});
+        }
     }, [props.x, props.y]);
 
     useEffect(() => {
@@ -73,7 +82,9 @@ export default function Worm(props) {
     useEffect(() => {
 
         if (consumeCollectible) {
-
+// console.log(trailLength + 1);
+// console.log(COLORS[trailLength].audio);
+            props.assets.colors[COLORS[(trailLength + 2) % 10].audio].replayAsync();
             props.assets.biteAudio.replayAsync();
             props.assets.collectCoinAudio.replayAsync();
 
@@ -113,7 +124,9 @@ export default function Worm(props) {
 
     useEffect(() => {
 
-        (trailLength === maxTrailLength) && setLikeWobble({ to: [{z: 1}, {z: 0}], config: { duration: 1000 } });
+        if (trailLength === maxTrailLength) {
+            setLikeWobble({to: [{z: 1}, {z: 0}], config: {duration: 1000}});
+        }
     }, [trailLength]);
 
     useEffect(() => {
@@ -131,84 +144,55 @@ export default function Worm(props) {
     //     return {x, y};
     // }
 
-    return !(x && y) ? null : <View>
+//     useEffect(() => {
+//
+//         // console.log(props.delta);
+// // console.log(Math.floor(props.x - WIDTH / 2), Math.floor(props.y - HEIGHT / 2 - 1), Math.atan2(Math.floor(props.x - WIDTH / 2), Math.floor(props.y - HEIGHT / 2))/(Math.PI/180));
+//         setHeadRotate({to: {rotate: Math.atan2(props.delta.x, props.delta.y) / (Math.PI / 180)}});
+//     }, [props.delta]);
+
+    return !(x && y) ? null : <View style={{zIndex: 0}}>
         {trail.map((props, index) => {
 
-                return <ViewAnimatedSpring native key={index} style={{
-                    ...css.body,
-                    backgroundColor: COLORS[((trailLength - index - 1) % 10) + 2],
-                    // borderColor: COLORS[index],
-                    width: index > trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
-                    height: index > trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
-                    zIndex: trailLength + 1 - index,
-                    // left: trail[index].left.value,
-                    // top: trail[index].top.value,
-                    ...props
-                }}/>
-            }
-        )}
-        <View style={{...css.head, left: x, top: y, zIndex: trailLength + 1}}/>
-        {collectiblePosition && <ViewAnimatedCollectible style={{
-            ...css.collectible, ...collectiblePosition,
+            return <ViewAnimated native key={index} style={{
+                ...CSS.body,
+                backgroundColor: COLORS[((trailLength - index - 1) % 10) + 2] ? COLORS[((trailLength - index - 1) % 10) + 2].hex : "none",
+                // borderColor: COLORS[index],
+                width: index > trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
+                height: index > trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
+                zIndex: trailLength + 1 - index,
+                // left: trail[index].left.value,
+                // top: trail[index].top.value,
+                ...props
+            }}/>
+        })}
+        {/*<View style={{...CSS.head, left: x, top: y, zIndex: trailLength + 1}}>
+            <Image source={require('../assets/images/head.png')} style={{
+                resizeMode: 'center', width: BODY_DIAMETER * 1.7,
+                transform: [{rotate: Math.atan2(props.delta.x, props.delta.y) / (Math.PI / 180) + "deg" /*headRotate.rotate.interpolate((x) => `${x}deg`)*!/]
+            }}/>
+        </View>*/}
+        <View style={{...CSS.head, left: x, top: y, zIndex: trailLength + 1}}/>
+        {collectiblePosition && <ViewAnimated style={{
+            ...CSS.collectible, ...collectiblePosition,
             zIndex: trailLength,
-            backgroundColor: COLORS[(trailLength % 10) + 2],
-            transform: [((_rotate) => { /*console.log('-----------',_rotate);*/
-                return _rotate;
-            })(rotate)]
+            backgroundColor: COLORS[(trailLength % 10) + 2].hex,
+            transform: [rotate]
         }}/>}
-        {(trailLength === maxTrailLength) && <View style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: WIDTH,
-            height: HEIGHT
-        }}><ImageAnimatedLikeWobble
-            source={require('../assets/images/thumbs-up.png')}
-            style={{
-                resizeMode: 'center', zIndex: 199, width: 200,
-                transform: likeWobble.z.interpolate({
-                        range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
-                        output: [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1]
-                    }).interpolate(z => [{scale:z}])
-            }}
-        /></View>}
-
+        {(trailLength === maxTrailLength) && <View style={CSS.likeWobbleWrapper}>
+            <View style={CSS.likeWobbleOverlay}/>
+            {likeWobble && <View style={CSS.likeWobbleImageWrapper}>
+                <ImageAnimated
+                    source={require('../assets/images/thumbs-up.png')}
+                    style={{
+                        ...CSS.likeWobble,
+                        transform: likeWobble.z.interpolate({
+                            range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
+                            output: [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1]
+                        }).interpolate(z => [{scale: z}])
+                    }}
+                />
+            </View>}
+        </View>}
     </View>;
 }
-
-const css = StyleSheet.create({
-    body: {
-        borderColor: "#FFF",
-        borderWidth: BORDER_WIDTH,
-        width: BODY_DIAMETER,
-        height: BODY_DIAMETER,
-        position: "absolute",
-        borderRadius: BODY_DIAMETER * 2,
-    },
-    anchor: {
-        position: "absolute"
-    },
-    head: {
-        backgroundColor: "#FF5877",
-        borderColor: "#FFC1C1",
-        borderWidth: BORDER_WIDTH,
-        width: BODY_DIAMETER,
-        height: BODY_DIAMETER,
-        position: "absolute",
-        borderRadius: BODY_DIAMETER * 2
-    },
-    collectible: {
-        backgroundColor: "#83ff00",
-        borderColor: "#FF75F9",
-        borderWidth: BORDER_WIDTH,
-        width: COLLECTIBLE_DIAMETER,
-        height: COLLECTIBLE_DIAMETER,
-        position: "absolute",
-        // borderRadius: BODY_DIAMETER * 2,
-        // transform: [{rotate: '45deg' }],
-        zIndex: 99
-    },
-});
