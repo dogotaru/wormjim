@@ -11,7 +11,9 @@ import {
     MAX_WIDTH,
     MAX_HEIGHT,
     BORDER_WIDTH,
-    COLLECTIBLE_DIAMETER, INDEX_MOD
+    COLLECTIBLE_DIAMETER, INDEX_MOD,
+    MAX_WIDTH_COLLECTIBLE,
+    MAX_HEIGHT_COLLECTIBLE
 } from "../constants/Layout";
 import {CSS_WORM as CSS} from "../constants/Styles";
 import {COLORS} from "../constants/Colors";
@@ -19,7 +21,7 @@ import {COLORS} from "../constants/Colors";
 export default function Worm(props) {
 
     const [{x, y}, setXY] = useState({x: 0, y: 0});
-    const [maxTrailLength, setMaxTrailLength] = useState(10);
+    const [maxTrailLength, setMaxTrailLength] = useState(40);
     const [bodyDecrementRatio, setBodyDecrementRatio] = useState(BODY_DIAMETER / (maxTrailLength + 20));
     const [trailLength, setTrailLength] = useState(0);
     const [trail, setTrail, stopTrail] = useTrail(maxTrailLength, () => ({left: 0, top: 0}));
@@ -34,6 +36,7 @@ export default function Worm(props) {
     const [consumeCollectible, setConsumeCollectible] = useState(false);
     const [needCollectible, setNeedCollectible] = useState(false);
     const [pauseCollectible, setPauseCollectible] = useState(false);
+    const [collectibleQuadrant, setCollectibleQuadrant] = useState(0);
 
     useEffect(() => {
 
@@ -53,7 +56,7 @@ export default function Worm(props) {
         if (trailLength < maxTrailLength) {
 
             const x = props.x < HALF_DIAMETER ? 1 : (props.x > MAX_WIDTH ? MAX_WIDTH - HALF_DIAMETER : props.x - HALF_DIAMETER);
-            const y = props.y < HALF_DIAMETER ? 1 : (props.y > MAX_HEIGHT - BORDER_WIDTH ? MAX_HEIGHT - BORDER_WIDTH : props.y);
+            const y = props.y < 1 ? 1 : (props.y > MAX_HEIGHT - HALF_DIAMETER ? MAX_HEIGHT - HALF_DIAMETER : props.y);
 
             setXY({x: x, y: y});
         }
@@ -65,17 +68,22 @@ export default function Worm(props) {
 
             setCollectiblePosition((([left, top]) => {
 
-                left %= (MAX_WIDTH - COLLECTIBLE_DIAMETER + 1);
-                top %= (MAX_HEIGHT - COLLECTIBLE_DIAMETER + 1);
+                left += ([0, 3].indexOf(collectibleQuadrant) === -1 ? MAX_WIDTH_COLLECTIBLE / 2 : 0);
+                top += ([0, 2].indexOf(collectibleQuadrant) === -1 ? MAX_HEIGHT_COLLECTIBLE / 2 : 0);
+
+                left %= MAX_WIDTH_COLLECTIBLE;
+                top %= MAX_HEIGHT_COLLECTIBLE;
 
                 (left < COLLECTIBLE_DIAMETER) && (left = COLLECTIBLE_DIAMETER);
                 (top < COLLECTIBLE_DIAMETER) && (top = COLLECTIBLE_DIAMETER);
+
                 setNeedCollectible(false);
+                setCollectibleQuadrant((collectibleQuadrant + 1) % 4);
 
                 return {left, top};
             })([
-                Math.floor(Math.random() * Math.floor(WIDTH)),
-                Math.floor(Math.random() * Math.floor(HEIGHT))
+                Math.floor(Math.random() * MAX_WIDTH_COLLECTIBLE / 2),
+                Math.floor(Math.random() * MAX_HEIGHT_COLLECTIBLE / 2)
             ]));
             props.assets.collectCoinAudio.replayAsync();
         }
@@ -88,6 +96,9 @@ export default function Worm(props) {
             props.assets.colors[COLORS[trailLength % INDEX_MOD].audio].replayAsync();
             props.assets.biteAudio.replayAsync();
 
+            setPauseCollectible(true);
+            setTrailLength(trailLength + 1);
+
             if ((trailLength === maxTrailLength - 1)) {
 
                 setTimeout(() => {
@@ -98,21 +109,19 @@ export default function Worm(props) {
                 }, 500);
             } else {
 
-                (trailLength % 7 === 0) && props.assets.cheersAudio.replayAsync();
+                (trailLength % 7 === 0) && setTimeout(() => {
+                    props.assets.cheersAudio.replayAsync()
+                }, 500);
                 (trailLength % 3 === 0) && props.assets.eatingAudio.replayAsync();
                 (trailLength % 5 === 0) && props.assets.smackAudio.replayAsync();
+
+                setTimeout(() => {
+
+                    setConsumeCollectible(false);
+                    setNeedCollectible(true);
+                    setPauseCollectible(false);
+                }, 1500);
             }
-
-            setPauseCollectible(true);
-            (trailLength < maxTrailLength) && setTrailLength(trailLength + 1);
-
-            setTimeout(() => {
-
-                setConsumeCollectible(false);
-                setNeedCollectible(true);
-                setPauseCollectible(false);
-            },1500);
-
         }
     }, [consumeCollectible]);
 
@@ -129,6 +138,9 @@ export default function Worm(props) {
         } else {
 
             props.assets.wormBackgroundMusic_level_01.stopAsync();
+            props.assets.cheersAudio.stopAsync();
+            props.assets.ohYeahAudio.stopAsync();
+            props.assets.clappingAudio.stopAsync();
         }
     }, [props.focusState]);
 
@@ -161,8 +173,8 @@ export default function Worm(props) {
 //         setHeadRotate({to: {rotate: Math.atan2(props.delta.x, props.delta.y) / (Math.PI / 180)}});
 //     }, [props.delta]);
 
-    return !(x && y) ? null : <View style={{ zIndex: 0, height: HEIGHT, width: WIDTH }}>
-        <View  style={{
+    return !(x && y) ? null : <View style={{zIndex: 0, height: HEIGHT, width: WIDTH}}>
+        <View style={{
             zIndex: 0,
             backgroundColor: trailLength ? COLORS[(trailLength - 1) % INDEX_MOD].hex : "#FFFFFF",
             opacity: .5,
@@ -173,7 +185,7 @@ export default function Worm(props) {
 
             return <ViewAnimated native key={index} style={{
                 ...CSS.body,
-                backgroundColor: COLORS[index % INDEX_MOD].hex,
+                backgroundColor: index >= trailLength ? "#ffffff" : COLORS[(trailLength - 1 - index) % INDEX_MOD].hex,
                 width: index >= trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
                 height: index >= trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
                 zIndex: trailLength - index,

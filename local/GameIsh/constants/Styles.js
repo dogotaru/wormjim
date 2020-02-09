@@ -1,5 +1,5 @@
 import {StyleSheet} from "react-native";
-import {BODY_DIAMETER, BORDER_WIDTH, COLLECTIBLE_DIAMETER, HEIGHT, WIDTH} from "./Layout";
+import {BODY_DIAMETER, BORDER_WIDTH, COLLECTIBLE_DIAMETER, HEIGHT, WIDTH, IS_SMALL_DEVICE} from "./Layout";
 
 export const CSS_WORM = StyleSheet.create({
     body: {
@@ -35,7 +35,7 @@ export const CSS_WORM = StyleSheet.create({
         zIndex: 99
     },
     likeWobble: {
-        resizeMode: 'center', width: WIDTH / 1.5, height: WIDTH / 1.5
+        resizeMode: 'contain', width: IS_SMALL_DEVICE ? WIDTH / 1.5 : WIDTH / 2.5
     },
     likeWobbleImageWrapper: {
         resizeMode: "contain",
@@ -71,7 +71,7 @@ export const CSS_HOME_SCREEN = StyleSheet.create({
         backgroundColor: "#ffffff"
     },
     playButton: {
-        height: 140, resizeMode: 'center'
+        height: 80, resizeMode: 'contain'
     },
     collectible: {
         backgroundColor: "#83ff00",
@@ -79,7 +79,8 @@ export const CSS_HOME_SCREEN = StyleSheet.create({
         borderWidth: 10,
         width: 100,
         height: 100,
-        zIndex: 1
+        zIndex: 1,
+        margin: 30
     }
 });
 
