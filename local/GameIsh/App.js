@@ -45,7 +45,7 @@ export default function App(props) {
             assets.smackAudio.setVolumeAsync(1);
             assets.clappingAudio.setVolumeAsync(1);
             assets.ohYeahAudio.setVolumeAsync(1);
-            assets.collectCoinAudio.setVolumeAsync(0.08);
+            assets.collectCoinAudio.setVolumeAsync(0.09);
         }
         return () => {
             Object.keys(assets).map((key) => {

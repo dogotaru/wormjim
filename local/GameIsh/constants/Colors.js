@@ -20,10 +20,9 @@ export const COLORS = [
     {audio: "yellow", hex: "#FFFF00"},
     {audio: "orange", hex: "#FF8C00"},
     {audio: "violet", hex: "#8A2BE2"},
-    {audio: "white", hex: "#FFFFFF"},
+    {audio: "white", hex: "#F8F8F8"},
     {audio: "grey", hex: "#AAAAAA"},
     {audio: "pink", hex: "#FFC0CB"},
     {audio: "purple", hex: "#6A0DAD"},
-    {audio: "red", hex: "#FF0000"},
-    {audio: "orange", hex: "#FF8C00"}
+    {audio: "red", hex: "#FF0000"}
 ];

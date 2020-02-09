@@ -11,7 +11,7 @@ import {
     MAX_WIDTH,
     MAX_HEIGHT,
     BORDER_WIDTH,
-    COLLECTIBLE_DIAMETER
+    COLLECTIBLE_DIAMETER, INDEX_MOD
 } from "../constants/Layout";
 import {CSS_WORM as CSS} from "../constants/Styles";
 import {COLORS} from "../constants/Colors";
@@ -21,7 +21,7 @@ export default function Worm(props) {
     const [{x, y}, setXY] = useState({x: 0, y: 0});
     const [maxTrailLength, setMaxTrailLength] = useState(10);
     const [bodyDecrementRatio, setBodyDecrementRatio] = useState(BODY_DIAMETER / (maxTrailLength + 20));
-    const [trailLength, setTrailLength] = useState(-1);
+    const [trailLength, setTrailLength] = useState(0);
     const [trail, setTrail, stopTrail] = useTrail(maxTrailLength, () => ({left: 0, top: 0}));
     const [rotate, setRotate, stopRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
     const [headRotate, setHeadRotate] = useSpring(() => ({from: {rotate: "180deg"}}));
@@ -33,6 +33,7 @@ export default function Worm(props) {
     const [collectiblePosition, setCollectiblePosition] = useState(null);
     const [consumeCollectible, setConsumeCollectible] = useState(false);
     const [needCollectible, setNeedCollectible] = useState(false);
+    const [pauseCollectible, setPauseCollectible] = useState(false);
 
     useEffect(() => {
 
@@ -76,33 +77,42 @@ export default function Worm(props) {
                 Math.floor(Math.random() * Math.floor(WIDTH)),
                 Math.floor(Math.random() * Math.floor(HEIGHT))
             ]));
+            props.assets.collectCoinAudio.replayAsync();
         }
     }, [needCollectible]);
 
     useEffect(() => {
 
         if (consumeCollectible) {
-// console.log(trailLength + 1);
-// console.log(COLORS[trailLength].audio);
-            props.assets.colors[COLORS[(trailLength + 2) % 10].audio].replayAsync();
-            props.assets.biteAudio.replayAsync();
-            props.assets.collectCoinAudio.replayAsync();
 
-            setConsumeCollectible(false);
-            setNeedCollectible(true);
+            props.assets.colors[COLORS[trailLength % INDEX_MOD].audio].replayAsync();
+            props.assets.biteAudio.replayAsync();
 
             if ((trailLength === maxTrailLength - 1)) {
 
-                props.assets.cheersAudio.replayAsync();
-                props.assets.ohYeahAudio.replayAsync();
-                props.assets.clappingAudio.replayAsync();
+                setTimeout(() => {
+
+                    props.assets.cheersAudio.replayAsync();
+                    props.assets.ohYeahAudio.replayAsync();
+                    props.assets.clappingAudio.replayAsync();
+                }, 500);
             } else {
 
                 (trailLength % 7 === 0) && props.assets.cheersAudio.replayAsync();
                 (trailLength % 3 === 0) && props.assets.eatingAudio.replayAsync();
                 (trailLength % 5 === 0) && props.assets.smackAudio.replayAsync();
             }
+
+            setPauseCollectible(true);
             (trailLength < maxTrailLength) && setTrailLength(trailLength + 1);
+
+            setTimeout(() => {
+
+                setConsumeCollectible(false);
+                setNeedCollectible(true);
+                setPauseCollectible(false);
+            },1500);
+
         }
     }, [consumeCollectible]);
 
@@ -151,16 +161,23 @@ export default function Worm(props) {
 //         setHeadRotate({to: {rotate: Math.atan2(props.delta.x, props.delta.y) / (Math.PI / 180)}});
 //     }, [props.delta]);
 
-    return !(x && y) ? null : <View style={{zIndex: 0}}>
+    return !(x && y) ? null : <View style={{ zIndex: 0, height: HEIGHT, width: WIDTH }}>
+        <View  style={{
+            zIndex: 0,
+            backgroundColor: trailLength ? COLORS[(trailLength - 1) % INDEX_MOD].hex : "#FFFFFF",
+            opacity: .5,
+            height: HEIGHT,
+            width: WIDTH
+        }}/>
         {trail.map((props, index) => {
 
             return <ViewAnimated native key={index} style={{
                 ...CSS.body,
-                backgroundColor: COLORS[((trailLength - index - 1) % 10) + 2] ? COLORS[((trailLength - index - 1) % 10) + 2].hex : "none",
-                // borderColor: COLORS[index],
-                width: index > trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
-                height: index > trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
-                zIndex: trailLength + 1 - index,
+                backgroundColor: COLORS[index % INDEX_MOD].hex,
+                width: index >= trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
+                height: index >= trailLength ? 0 : BODY_DIAMETER - index * bodyDecrementRatio,
+                zIndex: trailLength - index,
+                borderWidth: index < trailLength ? BORDER_WIDTH : 0,
                 // left: trail[index].left.value,
                 // top: trail[index].top.value,
                 ...props
@@ -174,10 +191,10 @@ export default function Worm(props) {
         </View>*/}
         <View style={{...CSS.head, left: x, top: y, zIndex: trailLength + 1}}/>
         {collectiblePosition && <ViewAnimated style={{
-            ...CSS.collectible, ...collectiblePosition,
+            ...CSS.collectible, ...collectiblePosition, opacity: pauseCollectible ? 0 : 1,
             zIndex: trailLength,
-            backgroundColor: COLORS[(trailLength % 10) + 2].hex,
-            transform: [rotate]
+            backgroundColor: COLORS[trailLength % INDEX_MOD].hex,
+            transform: pauseCollectible ? [] : [rotate]
         }}/>}
         {(trailLength === maxTrailLength) && <View style={CSS.likeWobbleWrapper}>
             <View style={CSS.likeWobbleOverlay}/>

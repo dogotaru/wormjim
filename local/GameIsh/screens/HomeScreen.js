@@ -48,10 +48,10 @@ export default function HomeScreen(props) {
             assets.homeBackgroundMusic.stopAsync();
             props.navigation.dispatch(pushAction);
         }} title="Play">
-            <Image
+            <View style={{resizeMode: "contain"}}><Image
                 source={require('../assets/images/play-button.png')}
-                style={CSS.button}
-            />
+                style={CSS.playButton}
+            /></View>
         </TouchableHighlight>
     </View>;
 }

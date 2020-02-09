@@ -4,7 +4,6 @@ import {BODY_DIAMETER, BORDER_WIDTH, COLLECTIBLE_DIAMETER, HEIGHT, WIDTH} from "
 export const CSS_WORM = StyleSheet.create({
     body: {
         borderColor: "#FFF",
-        borderWidth: BORDER_WIDTH,
         width: BODY_DIAMETER,
         height: BODY_DIAMETER,
         position: "absolute",
@@ -39,6 +38,7 @@ export const CSS_WORM = StyleSheet.create({
         resizeMode: 'center', width: WIDTH / 1.5, height: WIDTH / 1.5
     },
     likeWobbleImageWrapper: {
+        resizeMode: "contain",
         zIndex: 199,
         flex: 1,
         alignItems: 'center',
@@ -70,7 +70,7 @@ export const CSS_HOME_SCREEN = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: "#ffffff"
     },
-    button: {
+    playButton: {
         height: 140, resizeMode: 'center'
     },
     collectible: {

@@ -11,6 +11,7 @@ export const MAX_WIDTH = Math.floor(WIDTH - HALF_DIAMETER);
 export const MAX_HEIGHT = Math.floor(HEIGHT - HALF_DIAMETER);
 export const BORDER_WIDTH = Math.trunc(BODY_DIAMETER * 0.08);
 export const COLLECTIBLE_DIAMETER = BODY_DIAMETER / 1.5;
+export const INDEX_MOD = 11;
 
 export default {
   window: {
