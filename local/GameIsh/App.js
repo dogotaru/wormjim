@@ -100,7 +100,11 @@ export default function App(props) {
 
             Asset.loadAsync([
                 require('./assets/images/thumbs-up.png'),
-                require('./assets/images/play-button.png')
+                require('./assets/images/play-button.png'),
+                require('./assets/images/backgrounds/shapes.png'),
+                require('./assets/images/backgrounds/pattern-01.png'),
+                require('./assets/images/backgrounds/letters.png'),
+                require('./assets/images/backgrounds/dinos.png')
             ])
         ]);
     }

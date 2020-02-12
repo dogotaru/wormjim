@@ -43,14 +43,14 @@ export default function SingleTouch(props) {
                 position: "absolute",
                 zIndex: 1,
                 width: BODY_DIAMETER,
-                height: BODY_DIAMETER,
+                height: BODY_DIAMETER * 1.5,
                 alignItems: 'center',
                 justifyContent: 'center'
             }}><TouchableWithoutFeedback accessibilityIgnoresInvertColors={true} onPress={() => {
 
                 if (firstClick) {
 
-                    const pushAction = StackActions.push({ routeName: 'Home' });
+                    const pushAction = StackActions.push({routeName: 'Home'});
                     props.navigation.dispatch(pushAction);
                 } else
                     setTimeout(() => {

@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Dimensions, Animated, Easing, TouchableHighlight, Image, Text} from "react-native";
+import {
+    StyleSheet,
+    View,
+    ImageBackground,
+    Dimensions,
+    Animated,
+    Easing,
+    TouchableHighlight,
+    Image,
+    Text
+} from "react-native";
 import {useTrail, useSpring} from 'react-spring';
 import {
     ImageAnimated,
@@ -21,7 +31,7 @@ import {COLORS} from "../constants/Colors";
 export default function Worm(props) {
 
     const [{x, y}, setXY] = useState({x: 0, y: 0});
-    const [maxTrailLength, setMaxTrailLength] = useState(40);
+    const [maxTrailLength, setMaxTrailLength] = useState(22);
     const [bodyDecrementRatio, setBodyDecrementRatio] = useState(BODY_DIAMETER / (maxTrailLength + 20));
     const [trailLength, setTrailLength] = useState(0);
     const [trail, setTrail, stopTrail] = useTrail(maxTrailLength, () => ({left: 0, top: 0}));
@@ -37,6 +47,12 @@ export default function Worm(props) {
     const [needCollectible, setNeedCollectible] = useState(false);
     const [pauseCollectible, setPauseCollectible] = useState(false);
     const [collectibleQuadrant, setCollectibleQuadrant] = useState(0);
+    const [backgrounds] = useState([
+        require('../assets/images/backgrounds/shapes.png'),
+        require('../assets/images/backgrounds/pattern-01.png'),
+        require('../assets/images/backgrounds/letters.png'),
+        require('../assets/images/backgrounds/dinos.png')
+    ]);
 
     useEffect(() => {
 
@@ -173,11 +189,22 @@ export default function Worm(props) {
 //         setHeadRotate({to: {rotate: Math.atan2(props.delta.x, props.delta.y) / (Math.PI / 180)}});
 //     }, [props.delta]);
 
-    return !(x && y) ? null : <View style={{zIndex: 0, height: HEIGHT, width: WIDTH}}>
+    return !(x && y) ? null : <View style={{
+        zIndex: 0,
+        height: HEIGHT,
+        width: WIDTH
+    }}>
         <View style={{
+            position: "absolute",
             zIndex: 0,
-            backgroundColor: trailLength ? COLORS[(trailLength - 1) % INDEX_MOD].hex : "#FFFFFF",
-            opacity: .5,
+            opacity: .4,
+            height: HEIGHT,
+            width: WIDTH,
+            backgroundColor: trailLength ? COLORS[(trailLength - 1) % INDEX_MOD].hex : "#FFFFFF"
+        }}/>
+        <ImageBackground resizeMode={'repeat'} source={backgrounds[trailLength % 4]} style={{
+            zIndex: 0,
+            opacity: .8,
             height: HEIGHT,
             width: WIDTH
         }}/>
