@@ -103,8 +103,8 @@ export default function App(props) {
                 require('./assets/images/play-button.png'),
                 require('./assets/images/backgrounds/shapes.png'),
                 require('./assets/images/backgrounds/pattern-01.png'),
-                require('./assets/images/backgrounds/letters.png'),
-                require('./assets/images/backgrounds/dinos.png')
+                // require('./assets/images/backgrounds/letters.png'),
+                // require('./assets/images/backgrounds/dinos-02.png')
             ])
         ]);
     }

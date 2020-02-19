@@ -50,8 +50,8 @@ export default function Worm(props) {
     const [backgrounds] = useState([
         require('../assets/images/backgrounds/shapes.png'),
         require('../assets/images/backgrounds/pattern-01.png'),
-        require('../assets/images/backgrounds/letters.png'),
-        require('../assets/images/backgrounds/dinos.png')
+        // require('../assets/images/backgrounds/letters.png'),
+        // require('../assets/images/backgrounds/dinos-02.png')
     ]);
 
     useEffect(() => {
@@ -202,7 +202,7 @@ export default function Worm(props) {
             width: WIDTH,
             backgroundColor: trailLength ? COLORS[(trailLength - 1) % INDEX_MOD].hex : "#FFFFFF"
         }}/>
-        <ImageBackground resizeMode={'repeat'} source={backgrounds[trailLength % 4]} style={{
+        <ImageBackground resizeMode={'repeat'} source={backgrounds[trailLength % 2]} style={{
             zIndex: 0,
             opacity: .8,
             height: HEIGHT,

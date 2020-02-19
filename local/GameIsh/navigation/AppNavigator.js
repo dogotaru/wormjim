@@ -4,6 +4,7 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import HomeScreen from '../screens/HomeScreen';
 import WormScreen from "../screens/WormScreen";
+import AudioScreen from "../screens/AudioScreen";
 
 const config = Platform.select({
     web: {headerMode: 'screen'},
@@ -20,6 +21,12 @@ const WormStack = createStackNavigator(
         },
         Worm: {
             screen: (screenProps) => <WormScreen {...screenProps} />,
+            navigationOptions: {
+                headerShown: false
+            }
+        },
+        Audio: {
+            screen: (screenProps) => <AudioScreen {...screenProps} />,
             navigationOptions: {
                 headerShown: false
             }

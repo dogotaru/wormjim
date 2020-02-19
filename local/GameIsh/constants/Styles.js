@@ -90,3 +90,19 @@ export const CSS_WORM_SCREEN = StyleSheet.create({
         backgroundColor: "#FFF"
     }
 });
+
+export const CSS_AUDIO_SCREEN = StyleSheet.create({
+    effect: {
+        overflow: "hidden",
+        width: "100%",
+        color: "white",
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        // fontWeight: 800,
+        textTransform: "uppercase",
+        // willChange: "transform, opacity, height",
+        // whiteSpace: "nowrap",
+        lineHeight: 80
+    }
+});

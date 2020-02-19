@@ -6,8 +6,8 @@ services:
 #                - CHOSE_PROXY=artifactory
 #        networks:
 #            - verdaccio_verdaccio-bridge-network
-        environment:
-            - NODE_TLS_REJECT_UNAUTHORIZED=0
+#        environment:
+#            - NODE_TLS_REJECT_UNAUTHORIZED=0
         volumes:
             - C:\Users\Sergiu Dogotaru\Documents\bash\.bash_history:/home/node/.bash_history
 #networks:

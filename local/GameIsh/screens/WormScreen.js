@@ -8,11 +8,13 @@ import {BODY_DIAMETER, BORDER_WIDTH, HEIGHT, WIDTH} from "../constants/Layout";
 import {StackActions} from "react-navigation";
 import {Ionicons} from '@expo/vector-icons';
 import {TouchableWithoutFeedback} from "react-native";
+import Button from "../components/Button";
 
-export default function SingleTouch(props) {
+export default function WormScreen(props) {
 
     const [assets] = useState(props.screenProps.assets);
-    const [firstClick, setFirstClick] = useState(false);
+    const [firstClickHome, setFirstClickHome] = useState(false);
+    const [firstClickAudio, setFirstClickAudio] = useState(false);
     const [{x, y}, setXY] = useState({x: WIDTH / 2, y: HEIGHT / 2});
     // const [delta, setDelta] = useState({x: 0, y: 0});
     const focusState = useFocusState();
@@ -39,40 +41,12 @@ export default function SingleTouch(props) {
 
             <StatusBar hidden={false}/>
 
-            <View style={{
-                position: "absolute",
-                zIndex: 1,
-                width: BODY_DIAMETER,
-                height: BODY_DIAMETER * 1.5,
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}><TouchableWithoutFeedback accessibilityIgnoresInvertColors={true} onPress={() => {
-
-                if (firstClick) {
-
-                    const pushAction = StackActions.push({routeName: 'Home'});
-                    props.navigation.dispatch(pushAction);
-                } else
-                    setTimeout(() => {
-
-                        setFirstClick(false)
-                    }, 1000);
-
-                setFirstClick(true);
-            }} title="Go to Home">
-                <View style={{
-                    alignItems: 'center', justifyContent: 'center',
-                    borderWidth: BORDER_WIDTH,
-                    borderColor: "#00CC00",
-                    borderRadius: BODY_DIAMETER,
-                    width: BODY_DIAMETER / 1.3,
-                    height: BODY_DIAMETER / 1.3,
-                    backgroundColor: "#6A0DAD",
-                    opacity: !firstClick ? .4 : 1
-                }}>
-                    <Ionicons name="md-home" size={BODY_DIAMETER / 2} color="white"/>
-                </View>
-            </TouchableWithoutFeedback></View>
+            <Button
+                ionicon={"md-home"} position={{left: BORDER_WIDTH, top: BORDER_WIDTH * 5}}
+                pushAction={() => props.navigation.dispatch(StackActions.push({routeName: 'Home'}))}/>
+            <Button
+                ionicon={"md-happy"} position={{left: BORDER_WIDTH, top: BORDER_WIDTH * 3 + BODY_DIAMETER}}
+                pushAction={() => props.navigation.dispatch(StackActions.push({routeName: 'Audio'}))}/>
             <Worm style={{zIndex: 0}} x={x} y={y} assets={assets} focusState={focusState}/>
 
         </GameLoop>

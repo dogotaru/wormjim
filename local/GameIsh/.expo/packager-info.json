@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 889,
-  "expoServerNgrokUrl": "https://7e-z8d.anonymous.gameish.exp.direct",
-  "packagerNgrokUrl": "https://packager.7e-z8d.anonymous.gameish.exp.direct",
-  "ngrokPid": 936,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }

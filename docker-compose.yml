@@ -21,6 +21,6 @@ services:
 #            - CHOKIDAR_USEPOLLING=true
             - NPM_CONFIG_PREFIX=/home/node/.npm-global
             - NPM_CONFIG_LOGLEVEL=info
-            - ADB_IP=192.168.1.6
+            - ADB_IP=192.168.1.7
             - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.11
             - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
