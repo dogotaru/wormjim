@@ -20,9 +20,9 @@ export const COLORS = [
     {audio: "yellow", hex: "#FFFF00", wobble: "#AAAA00"},
     {audio: "orange", hex: "#FF8C00", wobble: "#FF8C00"},
     {audio: "violet", hex: "#8A2BE2", wobble: "#6A0DAD"},
-    {audio: "white", hex: "#F8F8F8", wobble: "#000000"},
-    {audio: "grey", hex: "#AAAAAA", wobble: "#000000"},
-    {audio: "pink", hex: "#FFC0CB", wobble: "#6A0DAD"},
+    {audio: "white", hex: "#F8F8F8", wobble: "#AAAAAA"},
+    {audio: "grey", hex: "#AAAAAA", wobble: "#666666"},
+    {audio: "pink", hex: "#FFC0CB", wobble: "#904f5b"},
     {audio: "purple", hex: "#6A0DAD", wobble: "#6A0DAD"},
     {audio: "red", hex: "#FF0000", wobble: "#FF0000"}
 ];

@@ -108,13 +108,13 @@ export const CSS_AUDIO_SCREEN = StyleSheet.create({
         // willChange: "transform, opacity, height",
         // whiteSpace: "nowrap",
         // lineHeight: 80,
-        fontFamily: 'grafitty-outline',
+        fontFamily: 'grafitty',
         fontSize: BODY_DIAMETER,
         color: "black",
         zIndex: 99,
-        // textShadowOffset: {width: 0, height: 50},
-        // textShadowRadius: 15,
-        // textShadowColor: "#000000"
+        textShadowOffset: {width: 0, height: 0},
+        textShadowRadius: 25,
+        textShadowColor: "#ffffff"
         // borderColor: "#FF75F9",
         // borderWidth: 10,
     }

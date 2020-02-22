@@ -109,7 +109,7 @@ export default function App(props) {
             ]),
 
             Font.loadAsync({
-                'grafitty-outline': require('./assets/fonts/grafitty-outline.ttf')
+                'grafitty': require('./assets/fonts/NMFBurner-Regular.otf')
             })
         ]);
     }

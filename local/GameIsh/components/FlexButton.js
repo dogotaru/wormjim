@@ -8,19 +8,16 @@ export default function FlexButton({style, ...props}) {
     const [firstClick, setFirstClick] = useState(false);
 
     return (
-        <TouchableWithoutFeedback style={{
+        <TouchableWithoutFeedback accessibilityIgnoresInvertColors={true} onPress={() => {
 
-        }} accessibilityIgnoresInvertColors={true} onPress={() => {
+            if (firstClick) {} else {
 
-            if (firstClick) {
-
-
-            } else
                 props.pushAction();
                 setTimeout(() => {
 
                     setFirstClick(false)
                 }, 1000);
+            }
 
             setFirstClick(true);
         }} title={props.title}><View style={{
@@ -40,7 +37,7 @@ export default function FlexButton({style, ...props}) {
                 borderRadius: BODY_DIAMETER,
                 width: BODY_DIAMETER / 1.3,
                 height: BODY_DIAMETER / 1.3,
-                backgroundColor: style.backgroundColor || "#6A0DAD",
+                backgroundColor: /*style.backgroundColor ||*/ "#6A0DAD",
                 opacity: 1
             }}>
                 <Ionicons name={props.ionicon} size={BODY_DIAMETER / 2} color={style.color || "white"} />
