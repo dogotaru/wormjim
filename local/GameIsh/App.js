@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react';
 import {Platform, StatusBar, StyleSheet, View} from 'react-native';
 import AppContainer from './navigation/AppNavigator';
 import {Audio} from "expo-av";
+import * as Font from 'expo-font';
 
 export default function App(props) {
     const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -105,7 +106,11 @@ export default function App(props) {
                 require('./assets/images/backgrounds/pattern-01.png'),
                 // require('./assets/images/backgrounds/letters.png'),
                 // require('./assets/images/backgrounds/dinos-02.png')
-            ])
+            ]),
+
+            Font.loadAsync({
+                'grafitty-outline': require('./assets/fonts/grafitty-outline.ttf')
+            })
         ]);
     }
 

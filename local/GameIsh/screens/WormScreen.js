@@ -43,7 +43,7 @@ export default function WormScreen(props) {
 
             <Button
                 ionicon={"md-home"} position={{left: BORDER_WIDTH, top: BORDER_WIDTH * 5}}
-                pushAction={() => props.navigation.dispatch(StackActions.push({routeName: 'Home'}))}/>
+                pushAction={() => props.navigation.dispatch(StackActions.popToTop())}/>
             <Button
                 ionicon={"md-happy"} position={{left: BORDER_WIDTH, top: BORDER_WIDTH * 3 + BODY_DIAMETER}}
                 pushAction={() => props.navigation.dispatch(StackActions.push({routeName: 'Audio'}))}/>

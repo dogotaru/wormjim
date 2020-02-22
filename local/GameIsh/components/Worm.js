@@ -23,9 +23,9 @@ import {
     BORDER_WIDTH,
     COLLECTIBLE_DIAMETER, INDEX_MOD,
     MAX_WIDTH_COLLECTIBLE,
-    MAX_HEIGHT_COLLECTIBLE
+    MAX_HEIGHT_COLLECTIBLE, TextAnimated
 } from "../constants/Layout";
-import {CSS_WORM as CSS} from "../constants/Styles";
+import {CSS_AUDIO_SCREEN, CSS_WORM as CSS} from "../constants/Styles";
 import {COLORS} from "../constants/Colors";
 
 export default function Worm(props) {
@@ -41,6 +41,9 @@ export default function Worm(props) {
         from: {z: 0},
         to: [{z: 1}, {z: 0}],
         config: {duration: 1000}
+    }));
+    const [textColorWobble, setTextColorWobble] = useSpring(() => ({
+        from: {scale: 0/*, right: -WIDTH * 1.5*/, opacity: 0}, to: []
     }));
     const [collectiblePosition, setCollectiblePosition] = useState(null);
     const [consumeCollectible, setConsumeCollectible] = useState(false);
@@ -108,6 +111,15 @@ export default function Worm(props) {
     useEffect(() => {
 
         if (consumeCollectible) {
+
+            setTextColorWobble({
+                to: [
+                    /*{right: 0, opacity: 1},*/
+                    {opacity: 1, scale: 1}, {scale: 1}, {scale: 0, opacity: 0},
+                    /*{right: WIDTH * 1.5, opacity: 0},*/
+                    /*{right: -WIDTH * 1.5,}, {opacity: 1}*/
+                ], config: {easing: "d3-easing"}
+            });
 
             props.assets.colors[COLORS[trailLength % INDEX_MOD].audio].replayAsync();
             props.assets.biteAudio.replayAsync();
@@ -197,17 +209,31 @@ export default function Worm(props) {
         <View style={{
             position: "absolute",
             zIndex: 0,
-            opacity: .4,
+            opacity: .3,
             height: HEIGHT,
             width: WIDTH,
             backgroundColor: trailLength ? COLORS[(trailLength - 1) % INDEX_MOD].hex : "#FFFFFF"
         }}/>
-        <ImageBackground resizeMode={'repeat'} source={backgrounds[trailLength % 2]} style={{
-            zIndex: 0,
-            opacity: .8,
-            height: HEIGHT,
-            width: WIDTH
-        }}/>
+        {/*<ImageBackground resizeMode={'repeat'} source={backgrounds[trailLength % 2]} style={{*/}
+        {/*    zIndex: 0,*/}
+        {/*    opacity: .8,*/}
+        {/*    height: HEIGHT,*/}
+        {/*    width: WIDTH*/}
+        {/*}}/>*/}
+        {trailLength ? <TextAnimated
+            style={{
+                ...CSS_AUDIO_SCREEN.effect,
+                // left: textColorWobble.left,
+                // right: textColorWobble.right,
+                color: COLORS[(trailLength - 1) % INDEX_MOD].wobble,
+                // textShadowColor: COLORS[(trailLength - 1) % INDEX_MOD].hex,
+                opacity: textColorWobble.opacity,
+                transform: textColorWobble.scale.interpolate({
+                    range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
+                    output: [1, 0.97, 0.9, 1.6, 0.9, 1.4, 1.03, 1]
+                }).interpolate(scale => [{scale}]),
+            }}
+        >{COLORS[(trailLength - 1) % INDEX_MOD].audio}</TextAnimated> : null}
         {trail.map((props, index) => {
 
             return <ViewAnimated native key={index} style={{

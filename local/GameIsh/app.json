@@ -12,9 +12,9 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon-worm.png",
     "splash": {
-      "image": "./assets/images/splash-worm.png",
+      "image": "./assets/images/splash-worm-black.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

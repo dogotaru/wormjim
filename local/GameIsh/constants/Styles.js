@@ -93,16 +93,29 @@ export const CSS_WORM_SCREEN = StyleSheet.create({
 
 export const CSS_AUDIO_SCREEN = StyleSheet.create({
     effect: {
-        overflow: "hidden",
-        width: "100%",
-        color: "white",
-        display: "flex",
-        justifyContent: "flex-start",
+        position: 'absolute',
+        width: WIDTH,
+        height: HEIGHT*6/7,
+        // overflow: "hidden",
+        // display: "flex",
+        // justifyContent: "flex-start",
         alignItems: "center",
+        justifyContent: 'center',
+        textAlign: 'center',
+        textAlignVertical: 'center',
         // fontWeight: 800,
         textTransform: "uppercase",
         // willChange: "transform, opacity, height",
         // whiteSpace: "nowrap",
-        lineHeight: 80
+        // lineHeight: 80,
+        fontFamily: 'grafitty-outline',
+        fontSize: BODY_DIAMETER,
+        color: "black",
+        zIndex: 99,
+        // textShadowOffset: {width: 0, height: 50},
+        // textShadowRadius: 15,
+        // textShadowColor: "#000000"
+        // borderColor: "#FF75F9",
+        // borderWidth: 10,
     }
 });
