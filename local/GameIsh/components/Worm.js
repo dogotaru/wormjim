@@ -1,14 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-    StyleSheet,
-    View,
-    ImageBackground,
-    Dimensions,
-    Animated,
-    Easing,
-    TouchableHighlight,
-    Image,
-    Text
+    View
 } from "react-native";
 import {useTrail, useSpring} from 'react-spring';
 import {
@@ -27,16 +19,18 @@ import {
 } from "../constants/Layout";
 import {CSS_AUDIO_SCREEN, CSS_WORM as CSS} from "../constants/Styles";
 import {COLORS} from "../constants/Colors";
+import {StackActions} from "react-navigation";
+import Button from "./Button";
 
 export default function Worm(props) {
 
     const [{x, y}, setXY] = useState({x: 0, y: 0});
-    const [maxTrailLength, setMaxTrailLength] = useState(22);
-    const [bodyDecrementRatio, setBodyDecrementRatio] = useState(BODY_DIAMETER / (maxTrailLength + 20));
+    const [maxTrailLength] = useState(22);
+    const [bodyDecrementRatio] = useState(BODY_DIAMETER / (maxTrailLength + 20));
     const [trailLength, setTrailLength] = useState(0);
     const [trail, setTrail, stopTrail] = useTrail(maxTrailLength, () => ({left: 0, top: 0}));
-    const [rotate, setRotate, stopRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
-    const [headRotate, setHeadRotate] = useSpring(() => ({from: {rotate: "180deg"}}));
+    const [rotate, setRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
+    // const [headRotate, setHeadRotate] = useSpring(() => ({from: {rotate: "180deg"}}));
     const [likeWobble, setLikeWobble] = useSpring(() => ({
         from: {z: 0},
         to: [{z: 1}, {z: 0}],
@@ -50,12 +44,12 @@ export default function Worm(props) {
     const [needCollectible, setNeedCollectible] = useState(false);
     const [pauseCollectible, setPauseCollectible] = useState(false);
     const [collectibleQuadrant, setCollectibleQuadrant] = useState(0);
-    const [backgrounds] = useState([
-        require('../assets/images/backgrounds/shapes.png'),
-        require('../assets/images/backgrounds/pattern-01.png'),
-        // require('../assets/images/backgrounds/letters.png'),
-        // require('../assets/images/backgrounds/dinos-02.png')
-    ]);
+    // const [backgrounds] = useState([
+    //     require('../assets/images/backgrounds/shapes.png'),
+    //     require('../assets/images/backgrounds/pattern-01.png'),
+    //     // require('../assets/images/backgrounds/letters.png'),
+    //     // require('../assets/images/backgrounds/dinos-02.png')
+    // ]);
 
     useEffect(() => {
 
@@ -175,7 +169,7 @@ export default function Worm(props) {
     useEffect(() => {
 
         if (trailLength === maxTrailLength) {
-            setLikeWobble({to: [{z: 1}, {z: 0}], config: {duration: 1000}});
+            setLikeWobble({to: [{z: 1}, {z: 0}, {z: 1}], config: {duration: 1000}});
         }
     }, [trailLength]);
 
@@ -274,6 +268,10 @@ export default function Worm(props) {
                         }).interpolate(z => [{scale: z}])
                     }}
                 />
+                <Button
+                    singleClick={true}
+                    ionicon={"ios-undo"} position={{top: HEIGHT / 1.6}}
+                    pushAction={() => props.navigation.dispatch(StackActions.popToTop())}/>
             </View>}
         </View>}
     </View>;

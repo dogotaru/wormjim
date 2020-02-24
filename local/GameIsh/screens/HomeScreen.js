@@ -9,9 +9,10 @@ const ViewAnimatedCollectible = animated(View);
 
 export default function HomeScreen(props) {
 
-    const [rotate, setRotate, stopRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
+    const [rotate, setRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
     const [collectibleInterval, setCollectibleInterval] = useState(null);
     const [assets] = useState(props.screenProps.assets);
+    const [isFocused, setIsFocused] = useState(false);
     const focusState = useFocusState();
 
     const rotateDiamond = () => {
@@ -21,16 +22,20 @@ export default function HomeScreen(props) {
 
     useEffect(() => {
 
-        if (focusState.isFocused) {
+        if (isFocused) {
 
             rotateDiamond();
             setCollectibleInterval(setInterval(rotateDiamond, 2500));
-            assets.homeBackgroundMusic.playAsync();
+            assets.homeBackgroundMusic.replayAsync();
         } else {
 
             assets.homeBackgroundMusic.stopAsync();
             clearInterval(collectibleInterval);
         }
+    }, [isFocused]);
+
+    useEffect(() => {
+        setIsFocused(focusState.isFocused);
     }, [focusState]);
 
     return <View style={CSS.container}>

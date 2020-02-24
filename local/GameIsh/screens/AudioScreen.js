@@ -1,23 +1,16 @@
-import React, {useEffect, useState, useCallback, useRef} from "react";
-import {StyleSheet, Dimensions, StatusBar, View, Image, Text, TouchableHighlight} from "react-native";
-import {GameLoop} from "react-native-game-engine";
-import {useFocusState} from 'react-navigation-hooks';
-import Worm from "../components/Worm";
+import React, {useEffect, useState} from "react";
+import {View} from "react-native";
 import {CSS_AUDIO_SCREEN, CSS_WORM_SCREEN as CSS} from "../constants/Styles";
 import {
     BODY_DIAMETER,
     BORDER_WIDTH,
     HEIGHT,
-    ImageAnimated, INDEX_MOD,
     TextAnimated,
-    ViewAnimated,
     WIDTH
 } from "../constants/Layout";
 import {StackActions} from "react-navigation";
-import {Ionicons} from '@expo/vector-icons';
-import {TouchableWithoutFeedback} from "react-native";
 import Button from "../components/Button";
-import {useSpring, useTransition, animated, interpolate} from "react-spring";
+import {useSpring} from "react-spring";
 import FlexButton from "../components/FlexButton";
 import {COLORS} from "../constants/Colors";
 
@@ -96,24 +89,27 @@ export default function AudioScreen(props) {
                     backgroundColor: item.hex,
                     borderColor: item.wobble,
                     color: 'white'
-                }} pushAction={() => {
-                    assets.colors[item.audio].replayAsync();
+                }} playAction={() => {
                     setShowColorName(item.audio);
-                }}/>)}
+                    return assets.colors[item.audio].replayAsync();
+                }} stopAction={() => assets.colors[item.audio].stopAsync()}/>)}
                 {[
-                    {ionicon: 'md-pizza', pushAction: () => assets.eatingAudio.replayAsync()},
-                    {ionicon: 'md-pizza', pushAction: () => assets.smackAudio.replayAsync()},
-                    {ionicon: 'md-happy', pushAction: () => assets.cheersAudio.replayAsync()},
-                    {ionicon: 'md-glasses', pushAction: () => assets.ohYeahAudio.replayAsync()},
-                    {ionicon: 'md-hand', pushAction: () => assets.clappingAudio.replayAsync()},
-                    {ionicon: 'md-ice-cream', pushAction: () => assets.biteAudio.replayAsync()},
-                    {ionicon: 'md-mic', pushAction: () => assets.collectCoinAudio.replayAsync()},
-                    {ionicon: 'md-musical-note', pushAction: () => assets.wormBackgroundMusic_level_01.stopAsync()},
-                    {ionicon: 'md-musical-note', pushAction: () => assets.homeBackgroundMusic.stopAsync()},
-                ].map((item, index) => <FlexButton key={`effect_${index}`} style={{
-                    width: 12.5 * WIDTH / 60, height: 12.5 * WIDTH / 60,
-                    margin: WIDTH / 80
-                }} {...item} />)}
+                    {ionicon: 'md-pizza', audio: assets.eatingAudio},
+                    {ionicon: 'md-pizza', audio: assets.smackAudio},
+                    {ionicon: 'md-happy', audio: assets.cheersAudio},
+                    {ionicon: 'md-glasses', audio: assets.ohYeahAudio},
+                    {ionicon: 'md-hand', audio: assets.clappingAudio},
+                    {ionicon: 'md-ice-cream', audio: assets.biteAudio},
+                    {ionicon: 'md-mic', audio: assets.collectCoinAudio},
+                    {ionicon: 'md-musical-note', audio: assets.wormBackgroundMusic_level_01},
+                    {ionicon: 'md-musical-note', audio: assets.homeBackgroundMusic},
+                ].map(({ionicon, audio}, index) =>
+                    <FlexButton
+                        key={`effect_${index}`} style={{
+                        width: 12.5 * WIDTH / 60, height: 12.5 * WIDTH / 60,
+                        margin: WIDTH / 80
+                    }} ionicon={ionicon} playAction={() => audio.replayAsync()} stopAction={() => audio.stopAsync()}/>
+                )}
             </View>
         </View>
     );
