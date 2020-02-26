@@ -21,6 +21,7 @@ import {CSS_AUDIO_SCREEN, CSS_WORM as CSS} from "../constants/Styles";
 import {COLORS} from "../constants/Colors";
 import {StackActions} from "react-navigation";
 import Button from "./Button";
+import {Ionicons} from "@expo/vector-icons";
 
 export default function Worm(props) {
 
@@ -44,12 +45,6 @@ export default function Worm(props) {
     const [needCollectible, setNeedCollectible] = useState(false);
     const [pauseCollectible, setPauseCollectible] = useState(false);
     const [collectibleQuadrant, setCollectibleQuadrant] = useState(0);
-    // const [backgrounds] = useState([
-    //     require('../assets/images/backgrounds/shapes.png'),
-    //     require('../assets/images/backgrounds/pattern-01.png'),
-    //     // require('../assets/images/backgrounds/letters.png'),
-    //     // require('../assets/images/backgrounds/dinos-02.png')
-    // ]);
 
     useEffect(() => {
 
@@ -214,20 +209,23 @@ export default function Worm(props) {
         {/*    height: HEIGHT,*/}
         {/*    width: WIDTH*/}
         {/*}}/>*/}
-        {trailLength ? <TextAnimated
-            style={{
-                ...CSS_AUDIO_SCREEN.effect,
-                // left: textColorWobble.left,
-                // right: textColorWobble.right,
-                color: COLORS[(trailLength - 1) % INDEX_MOD].wobble,
-                // textShadowColor: COLORS[(trailLength - 1) % INDEX_MOD].hex,
-                opacity: textColorWobble.opacity,
-                transform: textColorWobble.scale.interpolate({
-                    range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
-                    output: [1, 0.97, 0.9, 1.6, 0.9, 1.4, 1.03, 1]
-                }).interpolate(scale => [{scale}]),
-            }}
-        >{COLORS[(trailLength - 1) % INDEX_MOD].audio}</TextAnimated> : null}
+        {trailLength ? [
+            <View key='backgroundTransparent' style={{
+                ...CSS_AUDIO_SCREEN.effect.backgroundTransparent,
+                backgroundColor: COLORS[(trailLength - 1) % INDEX_MOD].hex
+            }}/>,
+            <View key='backgroundOpaque' style={CSS_AUDIO_SCREEN.effect.backgroundOpaque}>
+                <TextAnimated key='text' style={{
+                    ...CSS_AUDIO_SCREEN.effect.text,
+                    color: COLORS[(trailLength - 1) % INDEX_MOD].wobble,
+                    opacity: textColorWobble.opacity,
+                    transform: textColorWobble.scale.interpolate({
+                        range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
+                        output: [1, 0.97, 0.9, 1.6, 0.9, 1.4, 1.03, 1]
+                    }).interpolate(scale => [{scale}]),
+                }}
+                >{COLORS[(trailLength - 1) % INDEX_MOD].audio}</TextAnimated>
+            </View>] : null}
         {trail.map((props, index) => {
 
             return <ViewAnimated native key={index} style={{
@@ -242,19 +240,28 @@ export default function Worm(props) {
                 ...props
             }}/>
         })}
-        {/*<View style={{...CSS.head, left: x, top: y, zIndex: trailLength + 1}}>
-            <Image source={require('../assets/images/head.png')} style={{
-                resizeMode: 'center', width: BODY_DIAMETER * 1.7,
-                transform: [{rotate: Math.atan2(props.delta.x, props.delta.y) / (Math.PI / 180) + "deg" /*headRotate.rotate.interpolate((x) => `${x}deg`)*!/]
-            }}/>
-        </View>*/}
         <View style={{...CSS.head, left: x, top: y, zIndex: trailLength + 1}}/>
-        {collectiblePosition && <ViewAnimated style={{
-            ...CSS.collectible, ...collectiblePosition, opacity: pauseCollectible ? 0 : 1,
-            zIndex: trailLength,
-            backgroundColor: COLORS[trailLength % INDEX_MOD].hex,
-            transform: pauseCollectible ? [] : [rotate]
-        }}/>}
+        {collectiblePosition && [
+            <ViewAnimated key={"collectible"} style={{
+                ...CSS.collectible, ...collectiblePosition, opacity: pauseCollectible ? 0 : 1,
+                zIndex: trailLength,
+                backgroundColor: COLORS[trailLength % INDEX_MOD].hex,
+                transform: pauseCollectible ? [] : [rotate]
+            }}/>,
+            <View key={"ionicon"} style={{
+                display: "flex",
+                flexDirection: 'row',
+                alignContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: COLLECTIBLE_DIAMETER,
+                height: COLLECTIBLE_DIAMETER,
+                ...collectiblePosition, zIndex: trailLength, opacity: pauseCollectible ? 0 : 1
+            }}>
+                <Ionicons style={{}} name={"md-bug"} size={BODY_DIAMETER / 3.5}
+                         color={COLORS[trailLength % INDEX_MOD].invert}/>
+            </View>
+        ]}
         {(trailLength === maxTrailLength) && <View style={CSS.likeWobbleWrapper}>
             <View style={CSS.likeWobbleOverlay}/>
             {likeWobble && <View style={CSS.likeWobbleImageWrapper}>

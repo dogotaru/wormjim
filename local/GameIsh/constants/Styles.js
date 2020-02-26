@@ -80,7 +80,7 @@ export const CSS_HOME_SCREEN = StyleSheet.create({
         width: 100,
         height: 100,
         zIndex: 1,
-        margin: 30
+        margin: 30,
     }
 });
 
@@ -91,31 +91,55 @@ export const CSS_WORM_SCREEN = StyleSheet.create({
     }
 });
 
-export const CSS_AUDIO_SCREEN = StyleSheet.create({
-    effect: {
-        position: 'absolute',
-        width: WIDTH,
-        height: HEIGHT*6/7,
-        // overflow: "hidden",
-        // display: "flex",
-        // justifyContent: "flex-start",
-        alignItems: "center",
-        justifyContent: 'center',
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        // fontWeight: 800,
-        textTransform: "uppercase",
-        // willChange: "transform, opacity, height",
-        // whiteSpace: "nowrap",
-        // lineHeight: 80,
-        fontFamily: 'grafitty',
-        fontSize: BODY_DIAMETER,
-        color: "black",
-        zIndex: 99,
-        textShadowOffset: {width: 0, height: 0},
-        textShadowRadius: 25,
-        textShadowColor: "#ffffff"
-        // borderColor: "#FF75F9",
-        // borderWidth: 10,
-    }
-});
+export const CSS_AUDIO_SCREEN = {
+    effect: StyleSheet.create({
+        backgroundTransparent: {
+            position: "absolute",
+            zIndex: 99,
+            opacity: 0.2,
+            height: HEIGHT,
+            width: WIDTH
+        },
+        backgroundOpaque: {
+            position: "absolute",
+            zIndex: 99,
+            height: HEIGHT,
+            width: WIDTH,
+            display: "flex",
+            flexDirection: 'row',
+            flex: 1,
+            alignContent: "center",
+            alignItems: 'center'
+        },
+        text: {
+            fontFamily: 'grafitty',
+            width: WIDTH,
+            justifyContent: 'center',
+            textAlign: 'center',
+            textTransform: "uppercase",
+            fontSize: BODY_DIAMETER,
+            color: "black",
+            zIndex: 99,
+            textShadowOffset: {width: 0, height: 0},
+            textShadowRadius: 20,
+            textShadowColor: "#ffffff"
+        },
+        buttonsContainerFlex: {
+            height: HEIGHT,
+            width: WIDTH,
+            display: "flex",
+            flexDirection: 'row',
+            flex: 1,
+            // justifyContent: "space-evenly",
+            alignContent: "center",
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            padding: WIDTH / 30
+        },
+        button: {
+            width: 12.5 * WIDTH / 60,
+            height: 12.5 * WIDTH / 60,
+            margin: WIDTH / 80
+        }
+    })
+};

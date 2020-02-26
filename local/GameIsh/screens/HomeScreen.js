@@ -11,6 +11,7 @@ export default function HomeScreen(props) {
 
     const [rotate, setRotate] = useSpring(() => ({from: {rotate: "45deg"}}));
     const [collectibleInterval, setCollectibleInterval] = useState(null);
+    const [audioTimeout, setAudioTimeout] = useState(null);
     const [assets] = useState(props.screenProps.assets);
     const [isFocused, setIsFocused] = useState(false);
     const focusState = useFocusState();
@@ -26,17 +27,26 @@ export default function HomeScreen(props) {
 
             rotateDiamond();
             setCollectibleInterval(setInterval(rotateDiamond, 2500));
-            assets.homeBackgroundMusic.replayAsync();
+            setAudioTimeout(setTimeout(() => assets.homeBackgroundMusic.replayAsync(), 1000));
         } else {
 
             assets.homeBackgroundMusic.stopAsync();
             clearInterval(collectibleInterval);
+            clearInterval(audioTimeout);
         }
     }, [isFocused]);
 
     useEffect(() => {
         setIsFocused(focusState.isFocused);
     }, [focusState]);
+
+    useEffect(() => () => {
+
+        assets.homeBackgroundMusic.stopAsync();
+        clearInterval(collectibleInterval);
+        clearInterval(audioTimeout);
+        setIsFocused(false);
+    }, []);
 
     return <View style={CSS.container}>
         <ViewAnimatedCollectible style={{
