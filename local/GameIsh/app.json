@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "GameIsh",
-    "slug": "GameIsh",
+    "name": "Worm Jim",
+    "slug": "pandasystems-worm-jim",
     "privacy": "unlisted",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon-worm.png",
     "splash": {
@@ -23,7 +23,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.pandasystems.wormjim",
+      "supportsTablet": true,
+      "buildNumber": "1.0.1"
+    },
+    "android": {
+      "package": "com.pandasystems.wormjim",
+      "versionCode": 101,
+      "permissions": []
     },
     "androidNavigationBar": {
       "backgroundColor": "#000000"
@@ -31,6 +38,7 @@
     "androidStatusBar": {
       "backgroundColor": "#000000"
     },
-    "description": ""
+    "description": "Educational game for small kids and toddlers, from 1.5 years old.\n\nNo ads.\n\nLearning to recognize, read and spell color names by having much fun and playing an interactive very simple worm game. The worm starts having only one segment, the head. Each time the worm eats a collectible of a specific color the color name audio is played out, background changes to collected color and color name is briefly shown to the screen.\n\nIn the worm game you only need to collect all colored collectibles swiping the finger around the screen, in the way that the worm wonders around and collects items. The worm slides wonderful on the screen and the game is also improving kids' dexterity and fine motor skills, simply by using the swipe functionality of the device.\n\nThe application features an audio screed where your kid can play with all of the in game sounds. Enjoy the effects' palette and click and hear color names.\n\nGreat funny and high quality sounds.",
+    "owner": "dogotaru"
   }
 }
