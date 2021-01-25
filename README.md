@@ -16,9 +16,9 @@ The application features an audio screed where your kid can play with all of the
 
 Great funny and high quality sounds.
 
-[https://play.google.com/store/apps/details?id=com.pandasystems.wormjim](Worm Jim Android)
+[Worm Jim Android](https://play.google.com/store/apps/details?id=com.pandasystems.wormjim)
 
-[https://apps.apple.com/us/app/worm-jim/id1503251210](Worm Jim Apple)
+[Worm Jim Apple](https://apps.apple.com/us/app/worm-jim/id1503251210)
 
 # Install environment:
 ``
